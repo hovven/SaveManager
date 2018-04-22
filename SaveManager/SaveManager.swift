@@ -49,17 +49,20 @@ class SaveManager {
         return standard().object(forKey: key.rawValue) as AnyObject
     }
     
-    func get <T:Decodable> (key: SaveManagerKeys) -> T {
+    func get <T:Decodable> (key: SaveManagerKeys) -> T? {
         do{
-        let jsonData = UserDefaults.standard.value(forKey: key.rawValue)
+            let jsonData : Data? = UserDefaults.standard.value(forKey: key.rawValue) as? Data
         
-        let decoder = JSONDecoder()
-            return try decoder.decode(T.self, from: jsonData as! Data)
-            
+            if let data = jsonData {
+                let decoder = JSONDecoder()
+                return try decoder.decode(T.self, from: data)
+            } else {
+                return nil
+            }
         }catch{
             
         }
-        return T.self as! T
+        return T.self as? T
     }
     
     func delete (key: SaveManagerKeys) {
