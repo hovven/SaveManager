@@ -11,22 +11,28 @@ class UserSingleton {
     
     let user : User
     
-    private static var sharedInstance : UserSingleton?
+    struct Static
+    {
+        static var instance: UserSingleton?
+    }
     
-    final class func shared() -> UserSingleton {
-        guard let instance = sharedInstance else {
-            sharedInstance = UserSingleton()
-            return sharedInstance!
+    class var sharedInstance: UserSingleton
+    {
+        if Static.instance == nil
+        {
+            Static.instance = UserSingleton()
         }
-        return instance
+        
+        return Static.instance!
     }
     
     private init () {
         user = SaveManager.sharedInstance().get(key: SaveManagerKeys.user)!
     }
     
-    func resetSharedInstance() {
-        UserSingleton.sharedInstance = nil
+    func dispose()
+    {
+        UserSingleton.Static.instance = nil
     }
 }
 
