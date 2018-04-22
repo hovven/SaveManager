@@ -11,11 +11,23 @@ class UserSingleton {
     
     let user : User
     
-    static let sharedInstance = UserSingleton()
+    private static var sharedInstance : UserSingleton?
     
-    private init () {
-        user = SaveManager.sharedInstance().get(key: SaveManagerKeys.user)
+    final class func shared() -> UserSingleton {
+        guard let instance = sharedInstance else {
+            sharedInstance = UserSingleton()
+            return sharedInstance!
+        }
+        return instance
     }
     
+    private init () {
+        user = SaveManager.sharedInstance().get(key: SaveManagerKeys.user)!
+    }
+    
+    func resetSharedInstance() {
+        UserSingleton.sharedInstance = nil
+    }
 }
+
 
